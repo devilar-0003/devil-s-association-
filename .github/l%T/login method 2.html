@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Security Student Portal - R18A0521</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Login/Register Container */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #1e3c72;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .tab-nav {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f7fafc;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #718096;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+        }
+
+        .error-message, .success-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text h2 {
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .user-info {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Presentation Viewer */
+        .presentation-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .presentation-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .presentation-title {
+            color: #1e3c72;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .course-info {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .slide-counter {
+            color: #718096;
+            font-size: 16px;
+        }
+
+        .slide {
+            display: none;
+            min-height: 550px;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide h1, .slide h2, .slide h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+
+        .slide ul {
+            text-align: left;
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .slide li::before {
+            content: "🔒";
+            position: absolute;
+            left: 0;
+        }
+
+        .slide table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #f7fafc;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .slide th, .slide td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .slide th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .prev-btn {
+            background: #718096;
+            color: white;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .fullscreen-btn {
+            background: #f6ad55;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .login-box, .presentation-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Section -->
+    <div id="authSection" class="auth-container">
+        <div class="login-box">
+            <div class="logo">
+                <h1>🔒 Cyber Security Portal</h1>
+                <p>R18A0521 - B.Tech III Year II Sem</p>
+            </div>
+
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab('register')">Register</button>
+                <button class="tab-btn" onclick="switchTab('login')">Login</button>
+            </div>
+
+            <div id="errorMsg" class="error-message"></div>
+            <div id="registerSuccess" class="success-message" style="display: none;">Registration successful! You can now login.</div>
+
+            <!-- Register Form -->
+            <div id="register" class="tab-content active">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regStudentId">Student ID</label>
+                        <input type="text" id="regStudentId" placeholder="e.g., CS2024001" required maxlength="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" placeholder="student@college.edu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" placeholder="Minimum 6 characters" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Re-enter password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login" class="tab-content">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="studentId">Student ID</label>
+                        <input type="text" id="studentId" placeholder="Enter your student ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Access Cyber Security Notes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="dashboard">
+        <div class="header">
+            <div class="welcome-text">
+                <h2>🎓 Cyber Security Digital Notes</h2>
+                <div id="userInfo" class="user-info"></div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="presentation-container">
+            <div class="presentation-header">
+                <h1 class="presentation-title">CYBER SECURITY (R18A0521)</h1>
+                <div class="course-info">
+                    <strong>B.Tech III Year II Sem</strong> | Dept. of Information Technology<br>
+                    Malla Reddy College of Engineering & Technology
+                </div>
+                <div class="slide-counter">
+                    Slide <span id="currentSlide">1</span> of <span id="totalSlides">15</span>
+                </div>
+                <button class="fullscreen-btn" onclick="toggleFullscreen()">📱 Fullscreen</button>
+            </div>
+
+            <!-- Cyber Security Slides from CYBER-SECURITY-R18A0521.pdf -->
+            <div class="slides-container">
+                <!-- Slide 1: Title -->
+                <div class="slide active">
+                    <h1>CYBER SECURITY</h1>
+                    <h2>Digital Notes - R18A0521</h2>
+                    <p style="font-size: 20px; color: #1e3c72; margin-top: 30px;">
+                        B.Tech III Year II Sem (R18)<br>
+                        Department of Information Technology
+                    </p>
+                    <div style="font-size: 16px; margin-top: 20px; opacity: 0.8;">
+                        Malla Reddy College of Engineering & Technology
+                    </div>
+                </div>
+
+                <!-- Slide 2: Course Objectives -->
+                <div class="slide">
+                    <h2>Course Objectives</h2>
+                    <ul>
+                        <li>Understand various types of cyber-attacks and cyber-crimes</li>
+                        <li>Learn threats and risks within cyber security context</li>
+                        <li>Overview of cyber laws & cyber forensics concepts</li>
+                        <li>Study defensive techniques against attacks</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 3: UNIT-I Introduction -->
+                <div class="slide">
+                    <h2>UNIT-I: Introduction to Cyber Security</h2>
+                    <ul>
+                        <li>Basic Cyber Security Concepts</li>
+                        <li>Layers of Security</li>
+                        <li>Vulnerability, Threat, Harmful Acts</li>
+                        <li>CIA Triad (Confidentiality, Integrity, Availability)</li>
+                        <li>Cyber Threats: Warfare, Crime, Terrorism, Espionage</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 4: CIA Triad -->
+                <div class="slide">
+                    <h2>CIA Triad</h2>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 800px; margin: 0 auto; font-size: 18px;">
+                        <div style="background: #e3f2fd; padding: 20px; border-radius: 12px;">
+                            <h3>🔒 Confidentiality</h3>
+                            <p>Prevent disclosure to unauthorized parties</p>
+                        </div>
+                        <div style="background: #f3e5f5; padding: 20px; border-radius: 12px;">
+                            <h3>✅ Integrity</h3>
+                            <p>Protect from unauthorized modification</p>
+                        </div>
+                        <div style="background: #e8f5e8; padding: 20px; border-radius: 12px;">
+                            <h3>🟢 Availability</h3>
+                            <p>Ensure access when needed</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5: Types of Cyber Attacks -->
+                <div class="slide">
+                    <h2>Types of Cyber Attacks</h2>
+                    <ul>
+                        <li><strong>Web-based:</strong> Injection, DNS Spoofing, Session Hijacking, Phishing</li>
+                        <li><strong>System-based:</strong> Virus, Worm, Trojan Horse, Backdoors, Bots</li>
+                        <li><strong>Active Attacks:</strong> Masquerade, Session Replay, DoS/DDoS</li>
+                        <li><strong>Passive Attacks:</strong> Eavesdropping, Traffic Analysis</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 6: 7 Layers of Security -->
+                <div class="slide">
+                    <h2>7 Layers of Cyber Security</h2>
+                    <ol style="text-align: left; max-width: 600px; margin: 0 auto; font-size: 18px;">
+                        <li>Mission Critical Assets</li>
+                        <li>Data Security</li>
+                        <li>Application Security</li>
+                        <li>Endpoint Security</li>
+                        <li>Network Security</li>
+                        <li>Perimeter Security</li>
+                        <li>Human Layer</li>
+                    </ol>
+                </div>
+
+                <!-- Slide 7: UNIT-II Cyber Forensics -->
+                <div class="slide">
+                    <h2>UNIT-II: Cyberspace & Cyber Forensics</h2>
+                    <ul>
+                        <li>Cyber Security Regulations & International Law</li>
+                        <li>National Cyber Security Policy</li>
+                        <li>Digital Forensics Science</li>
+                        <li>Cyber Forensics & Digital Evidence</li>
+                        <li>Email Forensics Analysis</li>
+                        <li>Digital Forensics Lifecycle</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 8: UNIT-III Mobile Security -->
+                <div class="slide">
+                    <h2>UNIT-III: Cybercrime - Mobile Devices</h2>
+                    <ul>
+                        <li>Proliferation of Mobile/Wireless Devices</li>
+                        <li>Trends in Mobility</li>
+                        <li>Credit Card Frauds in Mobile Era</li>
+                        <li>Security Challenges by Mobile Devices</li>
+                        <li>Attacks on Mobile Phones</li>
+                        <li>Organizational Security Policies</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 9: UNIT-IV Organizational Implications -->
+                <div class="slide">
+                    <h2>UNIT-IV: Organizational Implications</h2>
+                    <ul>
+                        <li>Cost of Cybercrimes & IPR Issues</li>
+                        <li>Web Threats for Organizations</li>
+                        <li>Security & Privacy Implications</li>
+                        <li>Social Media Marketing Risks</li>
+                        <li>Social Computing Challenges</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 10: UNIT-V Privacy Issues -->
+                <div class="slide">
+                    <h2>UNIT-V: Privacy Issues</h2>
+                    <ul>
+                        <li>Basic Data Privacy Concepts</li>
+                        <li>Data Privacy Attacks</li>
+                        <li>Data Linking & Profiling</li>
+                        <li>Privacy Policies & Languages</li>
+                        <li>Privacy in Medical/Financial Domains</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 11: Cybercrime Examples -->
+                <div class="slide">
+                    <h2>Cybercrime Examples & Mini-Cases</h2>
+                    <ul>
+                        <li>Maharashtra Govt Website Hacked</li>
+                        <li>Indian Banks Lose Millions</li>
+                        <li>Parliament Attack</li>
+                        <li>Pune Police Bust Nigerian Racket</li>
+                        <li>Email Spoofing Instances</li>
+                        <li>Online Gambling Case</li>
+                        <li>IP Crime Case</li>
+                        <li>Financial Frauds</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 12: Text Books -->
+                <div class="slide">
+                    <h2>📚 Text Books</h2>
+                    <table>
+                        <tr><th>Author</th><th>Title</th></tr>
+                        <tr><td>Nina Godbole, Sunit Belpure</td><td>Cyber Security: Understanding Cyber Crimes, Computer Forensics and Legal Perspectives (Wiley)</td></tr>
+                        <tr><td>B.B. Gupta et al.</td><td>Computer and Cyber Security: Principles, Algorithm, Applications (CRC Press)</td></tr>
+                    </table>
+                </div>
+
+                <!-- Slide 13: Course Outcomes -->
+                <div class="slide">
+                    <h2>Course Outcomes</h2>
+                    <ul>
+                        <li>Analyze cyber-attacks, cybercrimes & protection methods</li>
+                        <li>Forensically investigate security incidents</li>
+                        <li>Manage privacy issues with policies</li>
+                        <li>Design secure software modules</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 14: National Cyber Security Policy -->
+                <div class="slide">
+                    <h2>National Cyber Security Policy</h2>
+                    <ul>
+                        <li>Secure cyberspace for citizens, business, government</li>
+                        <li>Protect privacy & information infrastructure</li>
+                        <li>24x7 threat monitoring mechanisms</li>
+                        <li>Compliance with global security standards</li>
+                    </ul>
+                </div>
+
+                <!-- Slide 15: Thank You -->
+                <div class="slide">
+                    <h1>Thank You!</h1>
+                    <p style="font-size: 28px; color: #1e3c72; margin: 30px 0;">
+                        Cyber Security Awareness<br>
+                        <strong>Stay Safe Online 🔒</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button id="prevBtn" class="nav-btn prev-btn" onclick="prevSlide()">Previous</button>
+                <button id="nextBtn" class="nav-btn next-btn" onclick="nextSlide()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User Database (localStorage)
+        let users = JSON.parse(localStorage.getItem('cyberStudents')) || {};
+        let currentUser = null;
+        let currentSlideIndex = 0;
+        const totalSlides = 15;
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Error/Success Messages
+        function showMessage(msg, isError = true) {
+            const msgDiv = document.getElementById(isError ? 'errorMsg' : 'registerSuccess');
+            msgDiv.textContent = msg;
+            msgDiv.style.display = 'block';
+            msgDiv.className = isError ? 'error-message' : 'success-message';
+            setTimeout(() => msgDiv.style.display = 'none', 4000);
+        }
+
+        // Registration
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const studentId = document.getElementById('regStudentId').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (users[studentId]) return showMessage('Student ID already registered!');
+            if (password !== confirmPassword) return showMessage('Passwords do not match!');
+            if (password.length < 6) return showMessage('Password must be at least 6 characters!');
+
+            users[studentId] = { email, password };
+            localStorage.setItem('cyberStudents', JSON.stringify(users));
+            showMessage('Registration successful! You can now access Cyber Security notes.', false);
+            this.reset();
+        });
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const studentId = document.getElementById('studentId').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!users[studentId] || users[studentId].password !== password) {
+                return showMessage('Invalid Student ID or Password!');
+            }
+
+            currentUser = studentId;
+            document.getElementById('userInfo').textContent = `Student ID: ${studentId} | Accessing R18A0521 Notes`;
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            updateSlideCounter();
+        });
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('authSection').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+            currentSlideIndex = 0;
+            showSlide(0);
+        }
+
+        // Presentation Controls
+        function showSlide(index) {
+            document.querySelectorAll('.slide').forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            currentSlideIndex = index;
+            updateSlideCounter();
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) showSlide(currentSlideIndex + 1);
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) showSlide(currentSlideIndex - 1);
+        }
+
+        function updateSlideCounter() {
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+            document.getElementById('totalSlides').textContent = totalSlides;
+        }
+
+        function toggleFullscreen() {
+            const container = document.querySelector('.presentation-container');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => console.log(err));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('dashboard').style.display === 'block') {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+            }
+        });
+
+        // Initialize
+        updateSlideCounter();
+    </script>
+</body>
+</html>
